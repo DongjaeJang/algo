@@ -1,12 +1,11 @@
 function solution(s) {
-  const hash = [];
-  const temp = s.split("");
   let answer = 0;
 
-  for (let i = 0; i < temp.length; i++) {
-    if (!hash[temp[i]]) hash[temp[i]] = 0;
+  const hash = [];
+  for (let i = 0; i < s.length; i++) {
+    if (!hash[s[i]]) hash[s[i]] = 0;
 
-    hash[temp[i]]++;
+    hash[s[i]]++;
   }
 
   for (let key in hash) {
