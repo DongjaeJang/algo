@@ -9,6 +9,7 @@ const solution = (money) => {
   for (let i = 1; i <= moneyList[moneyList.length - 1]; i++) {
     if (i !== moneyList[i - 1]) return i;
   }
+  return moneyList[i - 1] + 1;
 };
 
 // 모든 경우의 수를 구하는 순열
