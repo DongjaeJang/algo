@@ -27,7 +27,8 @@ const info3 = [
   [2, 4],
 ];
 /**
- * 최단거리는 BFS를 이용
+ * 모든 노드 간에 weight가 똑같다면, BFS를 이용하여 구한다.
+ * ---- 내 풀이 ----
  */
 const solution = (n, k, x, info) => {
   const board = Array.from(Array(n), () => Array(n).fill(0));
@@ -58,4 +59,45 @@ const bfs = (array, start, distance) => {
   }
 };
 
-console.log(solution(n2, k2, x2, info2));
+console.log(solution(n3, k3, x3, info3));
+
+/**
+ * ---- 책 풀이 ----
+ */
+const solution2 = (n, k, x, info) => {
+  const graph = Array.from(Array(n + 1), () => Array(0));
+  for (let i = 0; i < info.length; i++) {
+    const current = info[i];
+    graph[current[0]].push(current[1]);
+  }
+  // 모든 도시에 대한 최단 거리 초기화
+  const distance = Array.from(Array(n + 1).fill(-1));
+  distance[x] = 0; // 출발 도시 = 0
+
+  // bfs 수행
+  const queue = [x];
+  while (queue.length > 0) {
+    const now = queue.shift();
+    // 이동할 수 있는 도시 확인
+    for (let next of graph[now]) {
+      // 아직 방문하지 않았다면
+      if (distance[next] === -1) {
+        // 최단 거리 갱신
+        distance[next] = distance[now] + 1;
+        queue.push(next);
+      }
+    }
+  }
+  const answer = [];
+  let check = false;
+  for (let i = 1; i <= n; i++) {
+    if (distance[i] === k) {
+      answer.push(i);
+      check = true;
+    }
+  }
+
+  return check ? answer : [-1];
+};
+
+console.log(solution2(n3, k3, x3, info3));
