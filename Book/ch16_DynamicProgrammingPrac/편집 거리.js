@@ -23,7 +23,8 @@ const solution = (from, to) => {
         dp[i][j] = 1 + Math.min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1]);
     }
   }
-  return dp[flen - 1][tlen - 1];
+
+  return dp[flen][tlen];
 };
 
 console.log(solution(from3, to3));
