@@ -84,4 +84,88 @@ const solution = (n, map) => {
   }
 };
 
-console.log(solution(n3, map3));
+// console.log(solution(n3, map3));
+
+// 책 풀이
+// 자신보다 큰 물고기는 지나갈 수 없기때문에 최단 거리를 구할 대 bfs를 사용하는 게 좋음.
+// 매 먹이를 찾을 때마다 bfs사용해서 최단거리만을 구한 뒤 진행한다.
+
+const solution2 = (n, map) => {
+  const INF = 987654321;
+  let now_size = 2;
+  let now_x = 0,
+    now_y = 0;
+  let second = 0;
+  let count = 0;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (map[i][j] === 9) {
+        now_x = i;
+        now_y = j;
+        map[now_x][now_y] = 0;
+      }
+    }
+  }
+
+  const dx = [-1, 0, 1, 0];
+  const dy = [0, 1, 0, -1];
+
+  const bfs = () => {
+    const distance = Array.from(Array(n), () => Array(n).fill(-1));
+    const queue = [];
+    queue.push([now_x, now_y]);
+    distance[now_x][now_y] = 0;
+
+    while (queue.length > 0) {
+      const [x, y] = queue.shift();
+      for (let i = 0; i < 4; i++) {
+        const nextX = x + dx[i];
+        const nextY = y + dy[i];
+        if (0 <= nextX && nextX < n && 0 <= nextY && nextY < n) {
+          if (distance[nextX][nextY] == -1 && map[nextX][nextY] <= now_size) {
+            distance[nextX][nextY] = distance[x][y] + 1;
+            queue.push([nextX, nextY]);
+          }
+        }
+      }
+    }
+    return distance;
+  };
+
+  const find = (distance) => {
+    let x = 0,
+      y = 0;
+    let min = INF;
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (distance[i][j] !== -1 && 1 <= map[i][j] && map[i][j] < now_size) {
+          if (distance[i][j] < min) {
+            x = i;
+            y = j;
+            min = distance[i][j];
+          }
+        }
+      }
+    }
+    if (min === INF) return false;
+    else return [x, y, min];
+  };
+
+  while (true) {
+    const value = find(bfs());
+    if (!value) return second;
+    else {
+      now_x = value[0];
+      now_y = value[1];
+      second += value[2];
+      map[now_x][now_y] = 0;
+      count += 1;
+      if (count >= now_size) {
+        count -= now_size;
+        now_size += 1;
+      }
+    }
+  }
+};
+
+console.log(solution2(n3, map3));
